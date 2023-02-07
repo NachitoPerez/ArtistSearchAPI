@@ -20,4 +20,11 @@ describe("GET /artists/", () => {
         expect(response.res.rawHeaders).toEqual(expect.arrayContaining([`attachment; filename=\"${testingArtistsNames[0]}.csv\"`]));
         expect(response.status).toEqual(200);
     });
+
+    it("A name that doesn't exists returns artists searched by random name", async () => {
+        const response = await request(app).get(`/artists/artist.search/?name=${testingArtistsNames[1]}`);
+
+        expect(response.res.rawHeaders).not.toEqual(expect.arrayContaining([`attachment; filename=\"${testingArtistsNames[1]}.csv\"`]));
+        expect(response.status).toEqual(200);
+    });
 })
