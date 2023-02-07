@@ -18,7 +18,11 @@ const getArtistByName = async (req, res, next) => {
                 if(result.data.results['opensearch:totalResults'] > 0){
                     artistFound = true;
                     const parser = new Parser({});
-                    const csv = parser.parse(result.data.results.artistmatches.artist);
+                    const csv = parser.parse(result.data.results.artistmatches.artist.map((artist) => ({name: artist.name,
+                        mbid: artist.mbid,
+                        url: artist.url,
+                        image_small: artist.image.filter(img => img.size === "small").map(img => ({text: img['#text']})),
+                        image: artist.image})));
                     res.status(200).attachment(`${artistName}.csv`).send(csv);
                 } else {
                     artistName = artistNames[Math.floor(Math.random() * artistNames.length)];
