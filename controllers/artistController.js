@@ -1,9 +1,17 @@
+const axios = require("axios");
 const data = require("../data");
+const {apiKey} = require("../constants");
+
 const getArtistByName = async (req, res, next) => {
-    const artistName = req.params.name;
-    console.log(artistName)
+    const artistName = req.query.name;
+    console.log("Artist Name: ", artistName);
 
     try {
+        axios.patch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${artistName}&api_key=${apiKey}&format=json`, {})
+            .then(res => {
+                console.log(res.data.results['opensearch:totalResults']);
+
+            })
         const artist = data.filter(art => art.name.includes(artistName))
         console.log(artist)
         if (artist.length !== 0) {
