@@ -2,25 +2,31 @@ const axios = require("axios");
 const artistNames = require("../data");
 const {apiKey} = require("../constants");
 
+async function getApiArtist(name) {
+    return await axios.patch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=${apiKey}&format=json`, {});
+}
 const getArtistByName = async (req, res, next) => {
-    const artistName = req.query.name;
-    console.log("Artist Name: ", artistName);
+    let artistName = req.query.name;
+    let artistFound = false;
+    let result = null;
 
     try {
-        axios.patch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${artistName}&api_key=${apiKey}&format=json`, {})
-            .then(result => {
+        while (!artistFound) {
+            result = await getApiArtist(artistName);
+            if(result.data.hasOwnProperty('results')) {
                 if(result.data.results['opensearch:totalResults'] > 0){
-                    res.status(200).send(result.data);
+                    artistFound = true;
+                    res.status(200).send(result.data.results.artistmatches.artist);
                 } else {
-                    const randArtist = artistNames[Math.floor(Math.random() * artistNames.length)];
-                    //data.filter(art => art.name.includes(artistName))
-                    axios.patch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${randArtist}&api_key=${apiKey}&format=json`, {})
-                        .then(result2 => res.status(200).send(result2.data));
+                    artistName = artistNames[Math.floor(Math.random() * artistNames.length)];
                 }
-            })
+            } else {
+                throw new Error('LastFM API error');
+            }
+        }
     } catch (error) {
-        console.error(error)
-        next(ApiError.internalError("Internal error when searching the artist"));
+        console.error('Err: ',error);
+        next(ApiError.internalError("Internal API error when searching the artist"));
     }
 }
 
