@@ -1,6 +1,7 @@
 const axios = require("axios");
 const artistNames = require("../data");
 const {apiKey} = require("../constants");
+const {Parser} = require("@json2csv/plainjs");
 
 async function getApiArtist(name) {
     return await axios.patch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=${apiKey}&format=json`, {});
@@ -16,7 +17,9 @@ const getArtistByName = async (req, res, next) => {
             if(result.data.hasOwnProperty('results')) {
                 if(result.data.results['opensearch:totalResults'] > 0){
                     artistFound = true;
-                    res.status(200).send(result.data.results.artistmatches.artist);
+                    const parser = new Parser({});
+                    const csv = parser.parse(result.data.results.artistmatches.artist);
+                    res.status(200).attachment(`${artistName}.csv`).send(csv);
                 } else {
                     artistName = artistNames[Math.floor(Math.random() * artistNames.length)];
                 }
