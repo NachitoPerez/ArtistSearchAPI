@@ -20,10 +20,12 @@
   },
   "homepage": "https://github.com/NachitoPerez/IncedoBackEnd#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "react": "^18.0.0"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",
+    "axios": "^1.3.2",
     "eslint": "^8.15.0",
     "jest": "^28.1.0",
     "nodemon": "^2.0.15",
