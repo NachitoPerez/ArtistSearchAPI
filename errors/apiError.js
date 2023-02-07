@@ -4,10 +4,6 @@ class ApiError {
         this.message = message;
     }
 
-    static resourceNotFound(msg) {
-        return new ApiError(404, msg);
-    }
-
     static internalError(msg) {
         return new ApiError(500, msg);
     }
