@@ -10,7 +10,6 @@ async function getApiArtist(name) {
     api_key: apiKey,
     format: 'json'
     }});
-  //return await axios.patch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=${apiKey}&format=json`, {});
 }
 
 function parseToCSV(info) {
