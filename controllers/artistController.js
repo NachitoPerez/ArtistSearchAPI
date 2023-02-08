@@ -4,7 +4,13 @@ const {apiKey} = require('../constants');
 const {Parser} = require('@json2csv/plainjs');
 
 async function getApiArtist(name) {
-  return await axios.patch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=${apiKey}&format=json`, {});
+  return await axios.patch(`https://ws.audioscrobbler.com/2.0/`, null, {params: {
+    method: 'artist.search',
+    artist: name,
+    api_key: apiKey,
+    format: 'json'
+    }});
+  //return await axios.patch(`https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${name}&api_key=${apiKey}&format=json`, {});
 }
 
 function parseToCSV(info) {
